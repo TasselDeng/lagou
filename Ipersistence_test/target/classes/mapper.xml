@@ -1,8 +1,0 @@
-<mapper namespace="User">
-    <select id="selectOne" parameterType="com.lagou.pojo.User" resultType="com.lagou.pojo.User">
-        select * from user where id = #{id} and username = #{username}
-    </select>
-    <select id="selectList" resultType="com.lagou.pojo.User">
-        select * from user
-    </select>
-</mapper>
