@@ -3,6 +3,7 @@ package com.lagou.sqlsession;
 import com.lagou.pojo.Configuration;
 import com.lagou.pojo.MapperStatement;
 
+import java.lang.reflect.*;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -38,5 +39,31 @@ public class DefaultSqlSession implements SqlSession {
             throw new RuntimeException("返回结果有多个");
         }
         return null;
+    }
+
+    @Override
+    public <T> T getMapper(Class<?> mapperClass) {
+        Object o = Proxy.newProxyInstance(DefaultSqlSession.class.getClassLoader(), new Class[]{mapperClass}, new InvocationHandler() {
+            // proxy当前代理对象的应用，method当前被调用方法的引用，args传递的参数
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                // 底层还是执行JDBC代码，根据不同情况调用selectList或selectOne
+                // 准备参数 statementId ：SQL语句的唯一标识，namespace.id
+                // 因为这边获取不到mapper.xml的namespace.id，所以将mapper.xml的namespace配成对应接口全路径名，id为方法名
+                String methodName = method.getName();
+                String className = method.getDeclaringClass().getName();
+                String statementId = className + "." + methodName;
+                MapperStatement mapperStatement = configuration.getMapperStatementMap().get(statementId);
+                // 调用方法返回值类型
+                Type genericReturnType = method.getGenericReturnType();
+                // 判断是否进行了泛型类型参数化，声明类型中带有“<>”的都是参数化类型
+                if (genericReturnType instanceof ParameterizedType) {
+                    return selectList(statementId, args);
+                }
+                return selectOne(statementId, args);
+            }
+        });
+
+        return (T) o;
     }
 }

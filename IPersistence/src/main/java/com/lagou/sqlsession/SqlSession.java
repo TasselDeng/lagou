@@ -31,4 +31,14 @@ public interface SqlSession {
      * @return T
      */
     <T> T selectOne(String statementId, Object... params) throws SQLException, IllegalAccessException, NoSuchFieldException, ClassNotFoundException, Exception;
+
+
+    /**
+     * 利用JDK动态代理生成代理对象，并返回
+     *
+     * @param mapperClass
+     * @param <T>
+     * @return
+     */
+    <T> T getMapper(Class<?> mapperClass);
 }
