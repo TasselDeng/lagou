@@ -1,10 +1,12 @@
 package com.lagou.test;
 
+import com.lagou.dao.IUserDao;
 import com.lagou.pojo.User;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -18,11 +20,18 @@ import java.util.List;
  */
 public class MybatisTest {
 
-    @Test
-    public void test1() throws IOException {
+    private SqlSession sqlSession;
+
+    @Before
+    public void before() throws IOException {
         InputStream resourceAsStream = Resources.getResourceAsStream("sqlMapConfig.xml");
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(resourceAsStream);
-        SqlSession sqlSession = sessionFactory.openSession();
+        sqlSession = sessionFactory.openSession();
+    }
+
+    @Test
+    public void test1() {
+
 //        List<User> userList = sqlSession.selectList("user.findAll");
 //        userList.forEach(System.out::println);
 
@@ -35,5 +44,16 @@ public class MybatisTest {
         sqlSession.update("user.updateUser", user);
         sqlSession.delete("user.deleteUser", user);
         sqlSession.commit();
+    }
+
+    @Test
+    public void test2() {
+        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
+//        List<User> userList = userDao.findAll();
+//        userList.forEach(System.out::println);
+        User user = new User();
+        user.setId(1);
+        User user1 = userDao.findById(user);
+        System.out.println(user1);
     }
 }
