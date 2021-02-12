@@ -14,4 +14,8 @@ public interface IUserDao {
     User findById(User user);
 
     List<User> findAll();
+
+    List<User> findByCondition(User user);
+
+    List<User> findByIds(Integer[] ids);
 }

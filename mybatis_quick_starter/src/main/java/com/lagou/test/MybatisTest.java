@@ -56,4 +56,23 @@ public class MybatisTest {
         User user1 = userDao.findById(user);
         System.out.println(user1);
     }
+
+    @Test
+    public void test3() {
+        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
+        User user = new User();
+        user.setId(2);
+        user.setUsername("lucy");
+        List<User> users = userDao.findByCondition(user);
+        users.forEach(System.out::println);
+    }
+
+    @Test
+    public void test4() {
+        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
+        Integer[] ids = {1, 2};
+        List<User> users = userDao.findByIds(ids);
+        users.forEach(System.out::println);
+    }
+
 }
