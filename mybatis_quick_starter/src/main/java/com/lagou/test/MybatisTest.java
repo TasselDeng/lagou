@@ -1,6 +1,6 @@
 package com.lagou.test;
 
-import com.lagou.dao.IUserDao;
+import com.lagou.mapper.IUserDao;
 import com.lagou.pojo.User;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;

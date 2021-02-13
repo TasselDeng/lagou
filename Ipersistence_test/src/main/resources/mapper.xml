@@ -1,4 +1,4 @@
-<mapper namespace="com.lagou.dao.IUserDao">
+<mapper namespace="com.lagou.mapper.IUserDao">
     <select id="findByCondition" parameterType="com.lagou.pojo.User" resultType="com.lagou.pojo.User">
         select * from user where id = #{id} and username = #{username}
     </select>

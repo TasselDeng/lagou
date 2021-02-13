@@ -1,6 +1,6 @@
 package com.lagou.test;
 
-import com.lagou.dao.IUserDao;
+import com.lagou.mapper.IUserDao;
 import com.lagou.io.Resources;
 import com.lagou.pojo.User;
 import com.lagou.sqlsession.SqlSession;

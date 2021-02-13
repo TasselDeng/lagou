@@ -1,4 +1,4 @@
-package com.lagou.dao;
+package com.lagou.mapper;
 
 import com.lagou.pojo.User;
 
