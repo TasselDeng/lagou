@@ -1,6 +1,8 @@
 package com.lagou.test;
 
+import com.lagou.mapper.IOrderAnnotationMapper;
 import com.lagou.mapper.IOrderMapper;
+import com.lagou.mapper.IUserAnnotationMapper;
 import com.lagou.mapper.IUserMapper;
 import com.lagou.pojo.Order;
 import com.lagou.pojo.User;
@@ -13,6 +15,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,6 +61,39 @@ public class MyBatisTest {
     public void test3() {
         IUserMapper userMapper = sqlSession.getMapper(IUserMapper.class);
         List<User> userList = userMapper.findAllUserAndRole();
+        userList.forEach(System.out::println);
+    }
+
+    /**
+     * MyBatis注解
+     */
+    @Test
+    public void useAnnotation() {
+        IUserAnnotationMapper userAnnotationMapper = sqlSession.getMapper(IUserAnnotationMapper.class);
+        User user = new User(10, "Joy11", "12345611", new Date());
+//        userAnnotationMapper.insertUser(user);
+//        userAnnotationMapper.updateUser(user);
+        userAnnotationMapper.deleteUser(10);
+        sqlSession.commit();
+    }
+
+    /**
+     * MyBatis注解一对一
+     */
+    @Test
+    public void useAnnotation2() {
+        IOrderAnnotationMapper orderAnnotationMapper = sqlSession.getMapper(IOrderAnnotationMapper.class);
+        List<Order> orderList = orderAnnotationMapper.findAll();
+        orderList.forEach(System.out::println);
+    }
+
+    /**
+     * MyBatis注解一对多
+     */
+    @Test
+    public void useAnnotation3() {
+        IUserAnnotationMapper userAnnotationMapper = sqlSession.getMapper(IUserAnnotationMapper.class);
+        List<User> userList = userAnnotationMapper.findAll();
         userList.forEach(System.out::println);
     }
 }

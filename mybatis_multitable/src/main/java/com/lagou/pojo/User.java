@@ -1,6 +1,7 @@
 package com.lagou.pojo;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
  * @date 2021-01-23 18:51
  */
 @Data
+@NoArgsConstructor
 public class User {
 
     private Integer id;
@@ -26,4 +28,11 @@ public class User {
     private List<Order> orderList;
 
     private List<Role> roleList;
+
+    public User(Integer id, String username, String password, Date birthday) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.birthday = birthday;
+    }
 }
