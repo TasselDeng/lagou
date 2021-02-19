@@ -96,4 +96,48 @@ public class MyBatisTest {
         List<User> userList = userAnnotationMapper.findAll();
         userList.forEach(System.out::println);
     }
+
+    /**
+     * MyBatis一级缓存
+     */
+    @Test
+    public void firstLevelCache() {
+        IUserAnnotationMapper userAnnotationMapper = sqlSession.getMapper(IUserAnnotationMapper.class);
+        User user1 = userAnnotationMapper.findById(1);
+        User user2 = userAnnotationMapper.findById(1);
+        System.out.println(user1 == user2);
+
+        User user = new User(10, "Joy11", "12345611", new Date());
+        userAnnotationMapper.insertUser(user);
+        User user3 = userAnnotationMapper.findById(1);
+        System.out.println(user1 == user3);
+    }
+
+    /**
+     * 二级缓存
+     *
+     * @throws IOException
+     */
+    @Test
+    public void secondLevelCache() throws IOException {
+        InputStream resourceAsStream = Resources.getResourceAsStream("sqlMapConfig.xml");
+        SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(resourceAsStream);
+        SqlSession sqlSession1 = sessionFactory.openSession();
+        SqlSession sqlSession2 = sessionFactory.openSession();
+        SqlSession sqlSession3 = sessionFactory.openSession();
+
+        IUserAnnotationMapper userAnnotationMapper1 = sqlSession1.getMapper(IUserAnnotationMapper.class);
+        IUserAnnotationMapper userAnnotationMapper2 = sqlSession2.getMapper(IUserAnnotationMapper.class);
+        IUserAnnotationMapper userAnnotationMapper3 = sqlSession3.getMapper(IUserAnnotationMapper.class);
+
+        User user1 = userAnnotationMapper1.findById(1);
+        sqlSession1.close();  // 关闭一级缓存
+        User user2 = userAnnotationMapper2.findById(1);
+        System.out.println(user1 == user2);
+
+        User user = new User(10, "Joy", "12345611", new Date());
+        userAnnotationMapper3.updateUser(user);
+        User user3 = userAnnotationMapper3.findById(1);
+        System.out.println(user1 == user3);
+    }
 }

@@ -4,6 +4,10 @@
 
 <configuration>
     <properties resource="jdbc.properties" />
+    <!--开启⼆级缓存-->
+    <settings>
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
     <typeAliases>
         <package name="com.lagou.pojo"/>
     </typeAliases>

@@ -11,6 +11,7 @@ import java.util.List;
  * @version 1.0
  * @date 2021-02-13 22:53
  */
+@CacheNamespace
 public interface IUserAnnotationMapper {
 
     @Insert("insert into user values (#{id}, #{username}, #{password}, #{birthday})")
