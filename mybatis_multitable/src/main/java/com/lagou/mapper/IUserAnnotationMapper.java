@@ -2,6 +2,7 @@ package com.lagou.mapper;
 
 import com.lagou.pojo.User;
 import org.apache.ibatis.annotations.*;
+import org.mybatis.caches.redis.RedisCache;
 
 import java.util.Date;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * @version 1.0
  * @date 2021-02-13 22:53
  */
-@CacheNamespace
+@CacheNamespace(implementation = RedisCache.class)
 public interface IUserAnnotationMapper {
 
     @Insert("insert into user values (#{id}, #{username}, #{password}, #{birthday})")

@@ -67,6 +67,7 @@
             <artifactId>lombok</artifactId>
             <version>1.18.11.97</version>
         </dependency>
+        <!--redis实现mybatis二级缓存-->
         <dependency>
             <groupId>org.mybatis.caches</groupId>
             <artifactId>mybatis-redis</artifactId>

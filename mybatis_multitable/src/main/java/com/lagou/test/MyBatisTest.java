@@ -135,9 +135,9 @@ public class MyBatisTest {
         User user2 = userAnnotationMapper2.findById(1);
         System.out.println(user1 == user2);
 
-        User user = new User(10, "Joy", "12345611", new Date());
-        userAnnotationMapper3.updateUser(user);
-        User user3 = userAnnotationMapper3.findById(1);
-        System.out.println(user1 == user3);
+//        User user = new User(10, "Joy", "12345611", new Date());
+//        userAnnotationMapper3.updateUser(user);
+//        User user3 = userAnnotationMapper3.findById(1);
+//        System.out.println(user1 == user3);
     }
 }
