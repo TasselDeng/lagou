@@ -11,6 +11,12 @@
     <typeAliases>
         <package name="com.lagou.pojo"/>
     </typeAliases>
+    <plugins>
+        <plugin interceptor="com.lagou.plugin.MyPlugin">
+            <!--配置参数-->
+            <property name="name" value="ying"/>
+        </plugin>
+    </plugins>
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
