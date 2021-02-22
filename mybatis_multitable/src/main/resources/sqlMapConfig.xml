@@ -16,6 +16,14 @@
             <!--配置参数-->
             <property name="name" value="ying"/>
         </plugin>
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <!--指定⽅⾔-->
+            <property name="dialect" value="mysql"/>
+        </plugin>
+        <plugin interceptor="tk.mybatis.mapper.mapperhelper.MapperInterceptor">
+            <!-- 通⽤Mapper接⼝，多个通⽤接⼝⽤逗号隔开 -->
+            <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>
+        </plugin>
     </plugins>
     <environments default="development">
         <environment id="development">

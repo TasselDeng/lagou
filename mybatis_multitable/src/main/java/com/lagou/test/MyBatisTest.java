@@ -1,10 +1,10 @@
 package com.lagou.test;
 
-import com.lagou.mapper.IOrderAnnotationMapper;
-import com.lagou.mapper.IOrderMapper;
-import com.lagou.mapper.IUserAnnotationMapper;
-import com.lagou.mapper.IUserMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.lagou.mapper.*;
 import com.lagou.pojo.Order;
+import com.lagou.pojo.Role;
 import com.lagou.pojo.User;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -139,5 +139,26 @@ public class MyBatisTest {
 //        userAnnotationMapper3.updateUser(user);
 //        User user3 = userAnnotationMapper3.findById(1);
 //        System.out.println(user1 == user3);
+    }
+
+    @Test
+    public void pageHelperTest() {
+        // 设置分页参数
+        PageHelper.startPage(1,1);
+        IUserAnnotationMapper userAnnotationMapper = sqlSession.getMapper(IUserAnnotationMapper.class);
+        List<User> users = userAnnotationMapper.findAll();
+        users.forEach(System.out::println);
+        // 分页信息
+        PageInfo<User> pageInfo = new PageInfo<>(users);
+        System.out.println(pageInfo);
+    }
+
+    @Test
+    public void mapperTest() {
+        IRoleMapper roleMapper = sqlSession.getMapper(IRoleMapper.class);
+        Role role = new Role();
+        role.setId(2);
+        Role selectOne = roleMapper.selectOne(role);
+        System.out.println(selectOne);
     }
 }
