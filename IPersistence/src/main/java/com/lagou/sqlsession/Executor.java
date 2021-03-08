@@ -27,4 +27,13 @@ public interface Executor {
      * @return List<E>
      */
     <E> List<E> query(Configuration configuration, MapperStatement mapperStatement, Object... params) throws SQLException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException, IntrospectionException;
+
+    /**
+     * 用jdbc执行增、删、改语句
+     * @param configuration
+     * @param mapperStatement
+     * @param params
+     * @return
+     */
+    int update(Configuration configuration, MapperStatement mapperStatement, Object... params) throws ClassNotFoundException, SQLException, IllegalAccessException, NoSuchFieldException;
 }

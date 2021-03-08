@@ -26,26 +26,7 @@ public class SimpleExecutor implements Executor {
 
     @Override
     public <E> List<E> query(Configuration configuration, MapperStatement mapperStatement, Object... params) throws SQLException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException, IntrospectionException {
-        // 1、获取数据库连接
-        Connection connection = configuration.getSource().getConnection();
-        // 2、解析SQL
-        String sql = mapperStatement.getSql();
-        BoundSql boundSql = getBoundSql(sql);
-        // 3、预处理SQL，获取preparedStatement
-        PreparedStatement preparedStatement = connection.prepareStatement(boundSql.getContent());
-        // 4、设置参数
-        String parameterType = mapperStatement.getParameterType();
-        Class<?> parameterClass = getClassType(parameterType);
-        List<ParameterMapping> parameterMappingList = boundSql.getParameterMappingList();
-        for (int i = 0; i < parameterMappingList.size(); i++) {
-            String parameterName = parameterMappingList.get(i).getContent();
-            // 利用反射给字段参数设置值
-            Field field = parameterClass.getDeclaredField(parameterName);
-            // 暴力访问
-            field.setAccessible(true);
-            Object o = field.get(params[0]);
-            preparedStatement.setObject(i + 1, o);
-        }
+        PreparedStatement preparedStatement = getPreparedStatement(configuration, mapperStatement, params[0]);
         // 5、执行SQL
         ResultSet resultSet = preparedStatement.executeQuery();
         // 6、封装结果集
@@ -72,6 +53,48 @@ public class SimpleExecutor implements Executor {
         }
 
         return (List<E>) list;
+    }
+
+    @Override
+    public int update(Configuration configuration, MapperStatement mapperStatement, Object... params) throws ClassNotFoundException, SQLException, IllegalAccessException, NoSuchFieldException {
+        PreparedStatement preparedStatement = getPreparedStatement(configuration, mapperStatement, params);
+        return preparedStatement.executeUpdate();
+    }
+
+    /**
+     * 获取PreparedStatement
+     *
+     * @param configuration
+     * @param mapperStatement
+     * @param param
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    private PreparedStatement getPreparedStatement(Configuration configuration, MapperStatement mapperStatement, Object param) throws SQLException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+        // 1、获取数据库连接
+        Connection connection = configuration.getSource().getConnection();
+        // 2、解析SQL
+        String sql = mapperStatement.getSql();
+        BoundSql boundSql = getBoundSql(sql);
+        // 3、预处理SQL，获取preparedStatement
+        PreparedStatement preparedStatement = connection.prepareStatement(boundSql.getContent());
+        // 4、设置参数
+        String parameterType = mapperStatement.getParameterType();
+        Class<?> parameterClass = getClassType(parameterType);
+        List<ParameterMapping> parameterMappingList = boundSql.getParameterMappingList();
+        for (int i = 0; i < parameterMappingList.size(); i++) {
+            String parameterName = parameterMappingList.get(i).getContent();
+            // 利用反射给字段参数设置值
+            Field field = parameterClass.getDeclaredField(parameterName);
+            // 暴力访问
+            field.setAccessible(true);
+            Object o = field.get(param);
+            preparedStatement.setObject(i + 1, o);
+        }
+        return preparedStatement;
     }
 
     /**

@@ -8,7 +8,10 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author ying
@@ -34,12 +37,19 @@ public class XMLMapperBuild {
         Element rootElement = document.getRootElement();
         String namespace = rootElement.attributeValue("namespace");
         List<Element> selectElementList = rootElement.selectNodes("//select");
-        for (Element selectElement : selectElementList) {
+        List<Element> insertElementList = rootElement.selectNodes("//insert");
+        List<Element> updateElementList = rootElement.selectNodes("//update");
+        List<Element> deleteElementList = rootElement.selectNodes("//delete");
+        List<Element> elementList = Stream.of(selectElementList, insertElementList,
+                updateElementList, deleteElementList)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        for (Element element : elementList) {
             // 构建封装MapperStatement
-            String id = selectElement.attributeValue("id");
-            String parameterType = selectElement.attributeValue("parameterType");
-            String resultType = selectElement.attributeValue("resultType");
-            String sql = selectElement.getTextTrim();
+            String id = element.attributeValue("id");
+            String parameterType = element.attributeValue("parameterType");
+            String resultType = element.attributeValue("resultType");
+            String sql = element.getTextTrim();
             MapperStatement mapperStatement = new MapperStatement(id, parameterType, resultType, sql);
             // 赋值进configuration
             String key = namespace + "." + id;

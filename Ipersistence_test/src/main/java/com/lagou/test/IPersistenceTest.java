@@ -1,13 +1,16 @@
 package com.lagou.test;
 
-import com.lagou.mapper.IUserDao;
 import com.lagou.io.Resources;
+import com.lagou.mapper.IUserDao;
 import com.lagou.pojo.User;
 import com.lagou.sqlsession.SqlSession;
 import com.lagou.sqlsession.SqlSessionFactory;
 import com.lagou.sqlsession.SqlSessionFactoryBuild;
+import org.dom4j.DocumentException;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.beans.PropertyVetoException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -18,12 +21,17 @@ import java.util.List;
  */
 public class IPersistenceTest {
 
-    @Test
-    public void test() throws Exception {
+    private SqlSession sqlSession;
+
+    @Before
+    public void before() throws PropertyVetoException, DocumentException {
         InputStream resourcesAsStream = Resources.getResourcesAsStream("sqlMapConfig.xml");
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuild().build(resourcesAsStream);
-        SqlSession sqlSession = sqlSessionFactory.openSession();
+        sqlSession = sqlSessionFactory.openSession();
+    }
 
+    @Test
+    public void test() throws Exception {
         User paramsUser = new User();
         paramsUser.setId(1);
         paramsUser.setUsername("lucy");
@@ -38,6 +46,17 @@ public class IPersistenceTest {
         users.forEach(System.out::println);
         User user1 = userDao.findByCondition(paramsUser);
         System.out.println(user1);
+    }
 
+    @Test
+    public void insertTest() {
+        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
+        User user = new User();
+        user.setId(10);
+        user.setUsername("张三");
+        user.setPassword("123");
+        user.setBirthday("1996-04-03");
+        int i = userDao.insertUser(user);
+        System.out.println(i);
     }
 }

@@ -42,6 +42,24 @@ public class DefaultSqlSession implements SqlSession {
     }
 
     @Override
+    public int insert(String statementId, Object... params) throws ClassNotFoundException, SQLException, NoSuchFieldException, IllegalAccessException {
+        MapperStatement mapperStatement = configuration.getMapperStatementMap().get(statementId);
+        return executor.update(configuration, mapperStatement, params);
+    }
+
+    @Override
+    public int delete(String statementId, Object... params) throws ClassNotFoundException, SQLException, NoSuchFieldException, IllegalAccessException {
+        MapperStatement mapperStatement = configuration.getMapperStatementMap().get(statementId);
+        return executor.update(configuration, mapperStatement, params);
+    }
+
+    @Override
+    public int update(String statementId, Object... params) throws ClassNotFoundException, SQLException, NoSuchFieldException, IllegalAccessException {
+        MapperStatement mapperStatement = configuration.getMapperStatementMap().get(statementId);
+        return executor.update(configuration, mapperStatement, params);
+    }
+
+    @Override
     public <T> T getMapper(Class<?> mapperClass) {
         Object o = Proxy.newProxyInstance(DefaultSqlSession.class.getClassLoader(), new Class[]{mapperClass}, new InvocationHandler() {
             // proxy当前代理对象的应用，method当前被调用方法的引用，args传递的参数

@@ -32,6 +32,40 @@ public interface SqlSession {
      */
     <T> T selectOne(String statementId, Object... params) throws SQLException, IllegalAccessException, NoSuchFieldException, ClassNotFoundException, Exception;
 
+    /**
+     * 新增
+     *
+     * @param statementId
+     * @param params
+     * @return
+     */
+    int insert(String statementId, Object... params) throws ClassNotFoundException, SQLException, NoSuchFieldException, IllegalAccessException;
+
+    /**
+     * 删除
+     *
+     * @param statementId
+     * @param params
+     * @return
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    int delete(String statementId, Object... params) throws ClassNotFoundException, SQLException, NoSuchFieldException, IllegalAccessException;
+
+    /**
+     * 修改
+     *
+     * @param statementId
+     * @param params
+     * @return
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    int update(String statementId, Object... params) throws ClassNotFoundException, SQLException, NoSuchFieldException, IllegalAccessException;
 
     /**
      * 利用JDK动态代理生成代理对象，并返回
