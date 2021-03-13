@@ -75,10 +75,21 @@ public class DefaultSqlSession implements SqlSession {
                 // 调用方法返回值类型
                 Type genericReturnType = method.getGenericReturnType();
                 // 判断是否进行了泛型类型参数化，声明类型中带有“<>”的都是参数化类型
-                if (genericReturnType instanceof ParameterizedType) {
-                    return selectList(statementId, args);
+                switch (mapperStatement.getTagEnum()) {
+                    case SELECT:
+                        if (genericReturnType instanceof ParameterizedType) {
+                            return selectList(statementId, args);
+                        }
+                        return selectOne(statementId, args);
+                    case UPDATE:
+                        return update(statementId, args);
+                    case INSERT:
+                        return insert(statementId, args);
+                    case DELETE:
+                        return delete(statementId, args);
+                    default:
+                        throw new RuntimeException("标签类型错误！");
                 }
-                return selectOne(statementId, args);
             }
         });
 

@@ -26,7 +26,7 @@ public class SimpleExecutor implements Executor {
 
     @Override
     public <E> List<E> query(Configuration configuration, MapperStatement mapperStatement, Object... params) throws SQLException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException, IntrospectionException {
-        PreparedStatement preparedStatement = getPreparedStatement(configuration, mapperStatement, params[0]);
+        PreparedStatement preparedStatement = getPreparedStatement(configuration, mapperStatement, params);
         // 5、执行SQL
         ResultSet resultSet = preparedStatement.executeQuery();
         // 6、封装结果集
@@ -73,7 +73,7 @@ public class SimpleExecutor implements Executor {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    private PreparedStatement getPreparedStatement(Configuration configuration, MapperStatement mapperStatement, Object param) throws SQLException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+    private PreparedStatement getPreparedStatement(Configuration configuration, MapperStatement mapperStatement, Object... param) throws SQLException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
         // 1、获取数据库连接
         Connection connection = configuration.getSource().getConnection();
         // 2、解析SQL
@@ -91,7 +91,7 @@ public class SimpleExecutor implements Executor {
             Field field = parameterClass.getDeclaredField(parameterName);
             // 暴力访问
             field.setAccessible(true);
-            Object o = field.get(param);
+            Object o = field.get(param[0]);
             preparedStatement.setObject(i + 1, o);
         }
         return preparedStatement;

@@ -23,4 +23,6 @@ public class MapperStatement {
     private String resultType;
 
     private String sql;
+
+    private TagEnum tagEnum;
 }

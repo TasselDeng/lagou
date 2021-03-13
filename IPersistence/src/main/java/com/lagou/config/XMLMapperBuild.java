@@ -2,6 +2,7 @@ package com.lagou.config;
 
 import com.lagou.pojo.Configuration;
 import com.lagou.pojo.MapperStatement;
+import com.lagou.pojo.TagEnum;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -40,17 +41,20 @@ public class XMLMapperBuild {
         List<Element> insertElementList = rootElement.selectNodes("//insert");
         List<Element> updateElementList = rootElement.selectNodes("//update");
         List<Element> deleteElementList = rootElement.selectNodes("//delete");
-        List<Element> elementList = Stream.of(selectElementList, insertElementList,
-                updateElementList, deleteElementList)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+        buildMapperStatement(namespace, selectElementList, TagEnum.SELECT);
+        buildMapperStatement(namespace, updateElementList, TagEnum.UPDATE);
+        buildMapperStatement(namespace, insertElementList, TagEnum.INSERT);
+        buildMapperStatement(namespace, deleteElementList, TagEnum.DELETE);
+    }
+
+    private void buildMapperStatement(String namespace, List<Element> elementList, TagEnum tagEnum) {
         for (Element element : elementList) {
             // 构建封装MapperStatement
             String id = element.attributeValue("id");
             String parameterType = element.attributeValue("parameterType");
             String resultType = element.attributeValue("resultType");
             String sql = element.getTextTrim();
-            MapperStatement mapperStatement = new MapperStatement(id, parameterType, resultType, sql);
+            MapperStatement mapperStatement = new MapperStatement(id, parameterType, resultType, sql, tagEnum);
             // 赋值进configuration
             String key = namespace + "." + id;
             configuration.getMapperStatementMap().put(key, mapperStatement);

@@ -35,10 +35,10 @@ public class IPersistenceTest {
         User paramsUser = new User();
         paramsUser.setId(1);
         paramsUser.setUsername("lucy");
-        User user = sqlSession.selectOne("com.lagou.dao.IUserDao.findByCondition", paramsUser);
+        User user = sqlSession.selectOne("com.lagou.mapper.IUserDao.findByCondition", paramsUser);
         System.out.println(user);
 
-        List<User> userList = sqlSession.selectList("com.lagou.dao.IUserDao.findAll");
+        List<User> userList = sqlSession.selectList("com.lagou.mapper.IUserDao.findAll");
         userList.forEach(System.out::println);
 
         IUserDao userDao = sqlSession.getMapper(IUserDao.class);
@@ -53,10 +53,31 @@ public class IPersistenceTest {
         IUserDao userDao = sqlSession.getMapper(IUserDao.class);
         User user = new User();
         user.setId(10);
-        user.setUsername("张三");
+        user.setUsername("Bruce");
         user.setPassword("123");
         user.setBirthday("1996-04-03");
         int i = userDao.insertUser(user);
+        System.out.println(i);
+    }
+
+    @Test
+    public void updateTest() {
+        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
+        User user = new User();
+        user.setId(10);
+        user.setUsername("Jack");
+        user.setPassword("321");
+        user.setBirthday("1996-03-03");
+        int i = userDao.updateUser(user);
+        System.out.println(i);
+    }
+
+    @Test
+    public void deleteTest() {
+        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
+        User user = new User();
+        user.setId(10);
+        int i = userDao.deleteUser(user);
         System.out.println(i);
     }
 }

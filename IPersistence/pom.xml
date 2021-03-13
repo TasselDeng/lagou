@@ -17,11 +17,10 @@
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/io.mateu/lombok -->
         <dependency>
-            <groupId>io.mateu</groupId>
+            <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.11.97</version>
+            <version>1.18.4</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
         <dependency>
