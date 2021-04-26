@@ -57,7 +57,7 @@ public class LagouDispatherServlet extends HttpServlet {
         // 1、加载配置文件springmvc.properties，获取扫描包路径等信息
         doLoadConfig(servletConfig);
 
-        // 2、包扫描，扫描到对应注解@LagouController、@LagouService、@LagouAutowired、@LagouRequestMapping
+        // 2、包扫描，获取所有类全限定类名存入classNameList
         doScan(properties.getProperty("scanPackage"));
 
         // 3、初始化bean对象
@@ -211,7 +211,7 @@ public class LagouDispatherServlet extends HttpServlet {
         // 获取包在当前ClassPath的绝对URI路径
         String scanPackagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
                 + scanPackage.replaceAll("\\.", "/");
-        // 获取包下所有文件，是目录就递归向下扫描，是类文件就将类全限定类型存入list
+        // 获取包下所有文件，是目录就递归向下扫描，是类文件就将类全限定类名存入list
         File packageFile = new File(scanPackagePath);
         File[] packageFiles = packageFile.listFiles();
         for (File file : packageFiles) {
