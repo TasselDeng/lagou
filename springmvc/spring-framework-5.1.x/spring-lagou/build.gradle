@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+
+group 'com.lagou'
+version '5.1.12.BUILD-SNAPSHOT'
+
+sourceCompatibility = 11
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile(project(":spring-context"))
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
