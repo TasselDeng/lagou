@@ -7,7 +7,7 @@
 
   <servlet>
     <servlet-name>lgoumvc</servlet-name>
-    <servlet-class>com.lagou.mvcframework.servlet.LagouDispatherServlet</servlet-class>
+    <servlet-class>com.lagou.mvcframework.servlet.LagouDispatcherServlet</servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
       <param-value>springmvc.properties</param-value>

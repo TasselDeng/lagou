@@ -1,9 +1,6 @@
 package com.lagou.mvcframework.servlet;
 
-import com.lagou.mvcframework.annotations.LagouAutowired;
-import com.lagou.mvcframework.annotations.LagouController;
-import com.lagou.mvcframework.annotations.LagouRequestMapping;
-import com.lagou.mvcframework.annotations.LagouService;
+import com.lagou.mvcframework.annotations.*;
 import com.lagou.mvcframework.pojo.Handler;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +27,7 @@ import java.util.regex.Pattern;
  * @version 1.0
  * @date 2021-04-22 01:09
  */
-public class LagouDispatherServlet extends HttpServlet {
+public class LagouDispatcherServlet extends HttpServlet {
 
     /**
      * springmcv配置文件信息
@@ -89,6 +86,12 @@ public class LagouDispatherServlet extends HttpServlet {
             // 类上的url
             String typeUrl = lagouRequestMapping.value();
             Method[] methods = aClass.getMethods();
+            // 类上拥有访问权限的用户
+            String [] classSecurityNames = null;
+            if (aClass.isAnnotationPresent(Security.class)) {
+                Security security = aClass.getAnnotation(Security.class);
+                classSecurityNames = security.value();
+            }
             for (Method method : methods) {
                 if (!method.isAnnotationPresent(LagouRequestMapping.class)) {
                     continue;
@@ -97,8 +100,22 @@ public class LagouDispatherServlet extends HttpServlet {
                 String methodUrl = methodLagouRequestMapping.value();
                 // 完整url
                 String url = typeUrl + methodUrl;
+                // 方法上拥有访问权限的用户
+                String [] methodSecurityNames = null;
+                if (method.isAnnotationPresent(Security.class)) {
+                    Security security = method.getAnnotation(Security.class);
+                    methodSecurityNames = security.value();
+                }
                 // 封装handler
                 Handler handler = new Handler(o, method, Pattern.compile(url));
+                // 将有权限的用户放入securityNameSet中
+                Set<String> securityNameSet = handler.getSecurityNameSet();
+                if (classSecurityNames != null) {
+                    Collections.addAll(securityNameSet, classSecurityNames);
+                }
+                if (methodSecurityNames != null) {
+                    Collections.addAll(securityNameSet, methodSecurityNames);
+                }
                 // 参数信息
                 Map<String, Integer> paramIndexMapping = handler.getParamIndexMapping();
                 Parameter[] parameters = method.getParameters();
@@ -248,6 +265,7 @@ public class LagouDispatherServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html;charset=UTF-8");
         if (CollectionUtils.isEmpty(handlerList)) {
             resp.getWriter().write("404 not found");
             return;
@@ -274,6 +292,14 @@ public class LagouDispatherServlet extends HttpServlet {
             }
             Integer index = paramIndexMapping.get(key);
             String value = StringUtils.join(entry.getValue(), ",");
+            // 判断当前用户是否有权限访问
+            if ("username".equals(key)) {
+                if (!handler.getSecurityNameSet().contains(value)) {
+                    resp.getWriter().write("没有权限访问");
+                    System.out.println("没有权限访问");
+                    return;
+                }
+            }
             paramValues[index] = value;
         }
         // request和response
